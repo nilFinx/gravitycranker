@@ -4,7 +4,7 @@ An alternative server that handles the Paypal ID authentication for GravityBox. 
 
 ## How to run
 
-```
+```sh
 luvit main
 ```
 

@@ -14,8 +14,9 @@ end
 
 _G.l = require "logger" (cfg.log_level)
 
-local querystring = require "querystring"
+local ch = require "coro-http"
 local json = require "json"
+local querystring = require "querystring"
 
 ---@class querydata
 local querydatasample = {
@@ -67,7 +68,18 @@ App = require "weblit-app"
 		method = "GET",
 		path = "/hosts.txt"
 	}, function(req, res, go)
-		-- TODO
+		local _, body = ch.request("GET", "https://ipv4.myip.wtf/text", {})
+		if body then
+			local ip = body:match("%d+[.]%d+[.]%d+[.]%d+")
+			if ip then
+				res.code = 200
+				res.body = ip.." gravitybox.ceco.sk.eu.org\n"
+				return
+			end
+		end
+		res.code = 503
+		res.reason = "Internal Server Error"
+		res.body = res.reason
 	end)
 
 	.start()
